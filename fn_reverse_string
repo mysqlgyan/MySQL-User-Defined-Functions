@@ -1,0 +1,28 @@
+
+drop function if exists fn_reverse_string ;
+create function fn_reverse_string(input_string varchar(255)) returns  varchar(255)
+begin 
+
+
+set @input_length=length(input_string) ; 
+set @new_string ='' ; 
+
+
+while @input_length >0 do 
+
+
+
+ set @new_string=concat(@new_string,SUBSTR(input_string,-1))  ;
+
+ set input_string=SUBSTR(input_string,1,@input_length-1) ; 
+
+ set @input_length  = @input_length -1 ; 
+
+
+end while ; 
+
+
+
+return @new_string  ; 
+
+end ; 
