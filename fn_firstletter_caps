@@ -1,0 +1,39 @@
+drop function if exists fn_firstletter_caps ;
+create function fn_firstletter_caps(input_text varchar(255) ) returns
+varchar(255)
+begin
+
+declare var_new_text varchar(255) default '' ;
+select length(input_text) into @datalength ;
+
+
+while @datalength>0 do
+
+###########Extract the first word
+select  substring_index(input_text,' ',1) into @first_word ;
+
+###########Extract the first character of first word
+select  substring(@first_word,1,1) into @first_character ;
+
+###########Make first letter capital of new word
+select  concat(upper(@first_character),substring(@first_word,2)) into
+@new_first_word ;
+
+###########Formulate new input_text after removing word we just processed
+select  trim(' ' from substring(input_text,length(@new_first_word)+1))
+into input_text ;
+
+
+###########Formulate new text with capital first letter
+set var_new_text=concat(var_new_text,' ',ifnull(@new_first_word,'')) ;
+
+###########Subtract length of input data length - new word length
+set @datalength = @datalength-(length(@new_first_word)+1) ;
+
+end while  ;
+
+set var_new_text = trim(' ' from var_new_text) ;
+
+return var_new_text ;
+
+end ;
